@@ -77,9 +77,10 @@ print(torch.all(y.eq(out)))
 """
 
 # Implementing softmax function
-dem = np.empty([64, 1])
-for i in range(64):
-    dem[i] = torch.sum(out[i])
-result = out / dem
-print(result)
-    
+def softmax(x):
+    return torch.exp(x) / torch.sum(torch.exp(x), dim = 1).view(64,1)
+
+probabilites = softmax(out)
+
+print(probabilites.shape)
+print(probabilites.sum(dim = 1))    
