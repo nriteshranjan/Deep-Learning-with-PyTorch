@@ -11,11 +11,9 @@ get_ipython().magic("config InlineBackend.figure_format = 'retina'")
 
 import numpy as np
 import torch
-
+import math
 import helper
-
 import matplotlib.pyplot as plt
-
 import tensorflow as tf
 
 def activation(x):
@@ -42,9 +40,15 @@ print(labels.shape)
 plt.imshow(images[1].numpy().squeeze(), cmap = 'Greys_r')
 
 #  Solution
-features = torch.flatten(images, start_dim=1)
-print(features.shape)
-n_input = features.shape[1]
+input = images.view(images.shape[0], - 1)
+""" # https://discuss.pytorch.org/t/what-is-the-difference-of-flatten-and-view-1-in-pytorch/51790
+ # or you can do this too
+ features = torch.flatten(images, start_dim=1)
+ # and use features instead of input
+ print("Checking equality of 2 tensors : ",torch.all(input.eq(features)))
+"""
+
+n_input = 784
 n_hidden = 256             # Number of hidden units
 n_output = 10              # Number of output units
 
@@ -56,9 +60,27 @@ W1 = torch.rand(n_input, n_hidden)
 W2 = torch.randn(n_hidden, n_output)
 
 # and bias terms for hidden and output layers
+
+b1 = torch.randn(256) 
+b2 = torch.randn(10)
+h = activation(torch.mm(input, W1 ) + b1)
+out = torch.mm(h, W2) + b2
+
+""" #or you can do this too
+# Getting output of above multi-layer
 B1 = torch.randn((1, n_hidden))
 B2 = torch.randn((1, n_output))
+output1 = activation(torch.mm(input, W1 ) + B1)
+y = torch.mm(output1, W2) + B2
+print(y.shape," ",out.shape)
+print(torch.all(y.eq(out)))
+"""
 
-# Getting output of above multi-layer
-output1 = activation(torch.mm(features, W1 ) + B1)
-print(output1)
+# Implementing softmax function
+def softmax(x):
+    return torch.exp(x) / torch.sum(torch.exp(x), dim = 1).view(64,1)
+
+probabilites = softmax(out)
+
+print(probabilites.shape)
+print(probabilites.sum(dim = 1))    
