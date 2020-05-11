@@ -19,7 +19,6 @@ import tensorflow as tf
 def activation(x):
   return (1 / (1 + torch.exp(-x)))
 
-## Run this cell
 from torchvision import datasets, transforms
 
 # Define a transform to normalise the data
@@ -48,7 +47,7 @@ input = images.view(images.shape[0], - 1)
  print("Checking equality of 2 tensors : ",torch.all(input.eq(features)))
 """
 
-n_input = 784
+n_input  = 784
 n_hidden = 256             # Number of hidden units
 n_output = 10              # Number of output units
 
@@ -60,7 +59,6 @@ W1 = torch.rand(n_input, n_hidden)
 W2 = torch.randn(n_hidden, n_output)
 
 # and bias terms for hidden and output layers
-
 b1 = torch.randn(256) 
 b2 = torch.randn(10)
 h = activation(torch.mm(input, W1 ) + b1)
