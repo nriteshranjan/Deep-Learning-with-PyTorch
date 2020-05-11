@@ -4,6 +4,7 @@ Created on Sat May  9 16:07:47 2020
 
 @author: rrite
 """
+
 import torch
 def activation(x):
   return (1 / (1 + torch.exp(-x)))
